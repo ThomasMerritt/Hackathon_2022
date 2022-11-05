@@ -23,12 +23,15 @@ class Block {
     }
 }
 
-class Enemy extends Block {
+class Enemy {
     constructor(type) {
+        //super(x, y);
         this.x = 100;
         this.y = 100;
         this.type = type;
         this.health = 0;
+        this.width = 0;
+        this.height = 0;
         this.damage = 0;
         this.attackSpeed = 0;
         this.speed = 0;
@@ -36,8 +39,7 @@ class Enemy extends Block {
         this.setEverything();
     }
     setEverything() {
-        t = this.type;
-        switch(t){
+        switch(this.type){
             case 0:
                 //for speedy boy
                 this.health = 1;
@@ -45,6 +47,8 @@ class Enemy extends Block {
                 this.attackSpeed = 1000;
                 this.speed = -10;
                 this.distanceCap = 100;
+                this.width = 30;
+                this.height = 30;
                 this.color = 'green';
                 break;
             case 1:
@@ -54,8 +58,8 @@ class Enemy extends Block {
                 this.attackSpeed = 3000;
                 this.speed = -1;
                 this.distanceCap = 100;
-                this.width = this.width * 1.5;
-                this.height = this.height * 1.5;
+                this.width = 300;
+                this.height = 75;
                 this.color = 'yellow';
                 break;
             case 2:
@@ -65,6 +69,8 @@ class Enemy extends Block {
                 this.attackSpeed = -1000;
                 this.speed = -3;
                 this.distanceCap = 1000;
+                this.width = 30;
+                this.height = 30;
                 this.color = 'purple';
                 break;
             case 3:
@@ -73,6 +79,8 @@ class Enemy extends Block {
                 this.damage = 10;
                 this.attackSpeed = -2500;
                 this.speed = -2;
+                this.width = 30;
+                this.height = 30;
                 this.distanceCap = 25;
                 this.color = 'grey';
                 
@@ -84,21 +92,19 @@ class Enemy extends Block {
                 this.attackSpeed = 3000;
                 this.speed = -5;
                 this.distanceCap = 25;
+                this.width = 75;
+                this.height = 75;
                 this.color = 'red';
                 break;
         }
-        this.setEverything();
-        this.draw();
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.fill();
     }
     
-}
-
-let animationgId;
-function animate() {
-    animationId = requestAnimationFrame(animate);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    block.draw();
 }
 
 function checkHealth(){
@@ -133,11 +139,7 @@ function newEnemy(){
     enemiesAll.push(newEnemy);
 }
 
-function playGame(){
-    let newEnemy = window.setInterval(newEnemy, 100); //Create new enemy every 3 seconds
-    newEnemy.y = getRandomInt%200;
-    newEnemy.x = window.innerWidth;
-}
+
 
 window.onload = function(){
     document.addEventListener('click', (e) =>{
@@ -147,9 +149,22 @@ window.onload = function(){
     playGame();
 }
 
+function playGame(){
+    window.setInterval(newEnemy, 3000); //Create new enemy every 3 seconds
+    
+}
 
+let animationgId;
+function animate() {
+    animationId = requestAnimationFrame(animate);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    enemy.setEverything();
+    enemy.draw();
+    block.draw();
+}
 
 let block = new Block(canvas.width / 2, canvas.height / 2);
-let enemy = new Enemy(3);
+let enemy = new Enemy(0);
 animate();
 
