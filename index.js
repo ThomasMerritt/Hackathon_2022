@@ -36,7 +36,7 @@ class Enemy {
     constructor(type) {
         //super(x, y);
         this.x = canvas.width;
-        this.y = 100;
+        this.y = getRandomInt(0, houseHeight);
         this.type = type;
         this.health = 0;
         this.width = 0;
@@ -54,7 +54,7 @@ class Enemy {
                 this.health = 1;
                 this.damage = 20;
                 this.attackSpeed = 1000;
-                this.speed = -10;
+                this.speed = -6;
                 this.distanceCap = 250;
                 this.width = 30;
                 this.height = 30;
@@ -63,7 +63,7 @@ class Enemy {
             case 1:
                 //for chonk
                 this.heath = 10;
-                this.damage = 40;
+                this.damage = 80;
                 this.attackSpeed = 3000;
                 this.speed = -1;
                 this.distanceCap = 500;
@@ -90,17 +90,17 @@ class Enemy {
                 this.speed = -2;
                 this.width = 30;
                 this.height = 30;
-                this.distanceCap = 25;
+                this.distanceCap = 300;
                 this.color = 'grey';
                 
                 break;
             case 4:
                 //for glass-cannon
                 this.health = 1;
-                this.damage = 50;
+                this.damage = 100;
                 this.attackSpeed = 3000;
-                this.speed = -5;
-                this.distanceCap = 25;
+                this.speed = -3;
+                this.distanceCap = 500;
                 this.width = 20;
                 this.height = 20;
                 this.color = 'red';
@@ -128,10 +128,17 @@ class Enemy {
 }
 
 function checkHealth(){
+    console.log("reaches here");
     for(let i=0; i<enemiesAll.length; ++i){
         if(enemiesAll[i].health <= 0){
-            delete enemiesAll[i];
+            // while(i!=enemiesAll.length-1){
+            //     let placeholder = enemiesAll[i+1];
+            //     enemiesAll[i+1] = enemiesAll[i];
+            //     enemiesAll[i]=placeholder;
+            // }
+            // enemiesAll.splice(,1)
             //blow up and then thomas_death.mp4
+            enemiesAll.splice(i, 1);
         }
     }
 }
@@ -140,6 +147,7 @@ function detectEnemies(mouseX, mouseY){
     for(let i = 0; i < enemiesAll.length; ++i){
         if(mouseX <= enemiesAll[i].x + enemiesAll[i].width && mouseX >= enemiesAll[i].x && mouseY <= enemiesAll[i].y + enemiesAll[i].height && mouseY >= enemiesAll[i].y){
             enemiesAll[i].health--;
+            console.log(enemiesAll[i].health);
             checkHealth();
         }
     }
@@ -157,31 +165,54 @@ function newEnemy(){
     enemiesAll.push(newEnemy);
 }
 
+function drawEnemies(){
+    for(let i = 0; i < enemiesAll.length; ++i){
+        enemiesAll[i].draw();
+    }
+}
 
+function moveEnemies(){
+    for(let i = 0; i < enemiesAll.length; ++i){
+        enemiesAll[i].move();
+    }
+}
 
 window.onload = function(){
     document.addEventListener('click', (e) =>{
         console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
-        detectEnemies(e.clientX, e.clientY);
+        var mouseX = e.clientX;
+        var mouseY = e.clientY;
+        detectEnemies(mouseX, mouseY);
     });
-    playGame();
+    //playGame();
 }
 
+var spawnTimer = 0;
 function playGame(){
-    window.setInterval(newEnemy, 3000); //Create new enemy every 3 seconds
+    //window.setInterval(newEnemy, 3000); //Create new enemy every 3 seconds
+    if(spawnTimer == 60){
+        newEnemy();
+        spawnTimer = 0;
+    }
+    else{
+        spawnTimer++;
+    }
 }
 
 let animationgId;
 function animate() {
     animationId = requestAnimationFrame(animate);
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    enemy.move();
-    enemy.draw();
+    
+    playGame();
+    drawEnemies();
+    moveEnemies();
+    
     house.draw();
 }
 
 let house = new Block(0, 0);
-let enemy = new Enemy(2);
+house.height = houseHeight;
+house.width = houseWidth;
 animate();
 
