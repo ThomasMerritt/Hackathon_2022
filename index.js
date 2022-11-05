@@ -23,7 +23,10 @@ class Block {
 
 let animationgId;
 function animate() {
-    
+    animationId = requestAnimationFrame(animate);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    Block.draw();
 }
 
 function getInput(e){
@@ -34,5 +37,7 @@ function getInput(e){
 }
 
 window.onload = function(){
+    e = MouseEvent();
     document.addEventListener('click', getInput(e));
 }
+
