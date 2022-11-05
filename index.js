@@ -13,9 +13,6 @@ class Block {
         this.color = 'black';
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
     }
 
     draw() {
@@ -33,7 +30,6 @@ class Enemy extends Block {
         this.health = 0;
         this.damage = 0;
         this.attackSpeed = 0;
-        this.xspeed = 0;
         this.maxspeed = 0;
         this.distanceCap = 0;
         this.setEverything();
@@ -46,8 +42,9 @@ class Enemy extends Block {
                 this.health = 1;
                 this.damage = 20;
                 this.attackSpeed = 1000;
-                this.maxspeed = -999;
+                this.maxspeed = -10;
                 this.distanceCap = 100;
+                this.color = 'green';
                 break;
             case 1:
                 //for chonk
@@ -58,6 +55,7 @@ class Enemy extends Block {
                 this.distanceCap = 100;
                 this.width = this.width * 1.5;
                 this.height = this.height * 1.5;
+                this.color = 'yellow';
                 break;
             case 2:
                 //for rangey
@@ -66,6 +64,7 @@ class Enemy extends Block {
                 this.attackSpeed = -1000;
                 this.maxspeed = 3;
                 this.distanceCap = 1000;
+                this.color = 'purple';
                 break;
             case 3:
                 //for noob
@@ -74,6 +73,7 @@ class Enemy extends Block {
                 this.attackSpeed = -2500;
                 this.maxspeed = -2;
                 this.distanceCap = 25;
+                this.color = 'grey';
                 
                 break;
             case 4:
@@ -83,6 +83,7 @@ class Enemy extends Block {
                 this.attackSpeed = 3000;
                 this.maxspeed = -5;
                 this.distanceCap = 25;
+                this.color = 'red';
                 break;
         }
         this.draw();
@@ -98,9 +99,14 @@ function animate() {
     block.draw();
 }
 
-function detectEnemies(){
-
+function detectEnemies(e){
+    let mouseX = e.clientX;
+    let mouseY = e.clientY;
+    for(let i = 0; i < enemiesAll.length; ++i){
+        if((mouseX <= enemiesAll[i].x + enemiesAll[i].width) && mouseX >= enemiesAll[i].x && mouseY <= )
+    }
 }
+
 
 window.onload = function(){
     document.addEventListener('click', (e) =>{
@@ -111,6 +117,6 @@ window.onload = function(){
 
 
 
-let block = new Block(canvas.width / 2, canvas.height / 2, 10, 10, 'red');
+let block = new Block(canvas.width / 2, canvas.height / 2);
 animate();
 
