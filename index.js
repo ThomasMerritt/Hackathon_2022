@@ -21,15 +21,18 @@ class Block {
     }
 }
 
+let animationgId;
+function animate() {
+    
+}
 
-
-function getInput(event){
+function getInput(e){
     console.log();
     posX = MouseEvent.clientX;
     posY = MouseEvent.clientY;
-    console.log("Mouse X position: " + eve + "\nMouse Y position: " + posY);
+    console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
 }
 
 window.onload = function(){
-    document.addEventListener('click', getInput(event));
+    document.addEventListener('click', getInput(e));
 }
