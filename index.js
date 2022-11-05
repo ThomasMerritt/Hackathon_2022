@@ -134,7 +134,7 @@ function newEnemy(){
 }
 
 function playGame(){
-    var newEnemy = window.setInterval(newEnemy, 100); //Create new enemy every 3 seconds
+    let newEnemy = window.setInterval(newEnemy, 100); //Create new enemy every 3 seconds
     newEnemy.y = getRandomInt%200;
     newEnemy.x = window.innerWidth;
 }
