@@ -37,11 +37,13 @@ function getInput(e){
 }
 
 window.onload = function(){
-    e = MouseEvent('mousedown');
-    document.addEventListener('click', getInput(e));
+    document.addEventListener('click', (e) =>{
+        console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
+    });
 }
 
 
 
 let block = new Block(canvas.width / 2 - 475, canvas.height / 2 + 255, 10, 10, 'red');
+animate();
 
