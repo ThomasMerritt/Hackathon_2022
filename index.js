@@ -3,8 +3,17 @@ const ctx = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerWidth;
+var houseWidth = 200;
+var houseHeight = canvas.height;
 
 const enemiesAll = [];
+var healthBase = 1000;
+
+function checkHealthBase(){
+    if(healthBase <= 0){
+        window.close();
+    }
+}
 
 class Block {
     constructor(x, y) {
@@ -26,7 +35,7 @@ class Block {
 class Enemy {
     constructor(type) {
         //super(x, y);
-        this.x = 100;
+        this.x = canvas.width;
         this.y = 100;
         this.type = type;
         this.health = 0;
@@ -46,7 +55,7 @@ class Enemy {
                 this.damage = 20;
                 this.attackSpeed = 1000;
                 this.speed = -10;
-                this.distanceCap = 100;
+                this.distanceCap = 250;
                 this.width = 30;
                 this.height = 30;
                 this.color = 'green';
@@ -57,7 +66,7 @@ class Enemy {
                 this.damage = 40;
                 this.attackSpeed = 3000;
                 this.speed = -1;
-                this.distanceCap = 100;
+                this.distanceCap = 500;
                 this.width = 300;
                 this.height = 75;
                 this.color = 'yellow';
@@ -66,9 +75,9 @@ class Enemy {
                 //for rangey
                 this.health = 2;
                 this.damage = 20;
-                this.attackSpeed = -1000;
-                this.speed = -3;
-                this.distanceCap = 1000;
+                this.attackSpeed = 1000;
+                this.speed = -1;
+                this.distanceCap = 1100;
                 this.width = 30;
                 this.height = 30;
                 this.color = 'purple';
@@ -92,12 +101,23 @@ class Enemy {
                 this.attackSpeed = 3000;
                 this.speed = -5;
                 this.distanceCap = 25;
-                this.width = 75;
-                this.height = 75;
+                this.width = 20;
+                this.height = 20;
                 this.color = 'red';
                 break;
         }
     }
+    attack(){
+        baseHealth-=this.damage;
+        checkHealthBase();
+    }
+
+    move() {
+        if(this.x >= this.distanceCap){
+            this.x += this.speed;
+        }
+    }
+    
     draw() {
         ctx.beginPath();
         ctx.fillStyle = this.color;
@@ -116,9 +136,7 @@ function checkHealth(){
     }
 }
 
-function detectEnemies(e){
-    let mouseX = e.clientX;
-    let mouseY = e.clientY;
+function detectEnemies(mouseX, mouseY){
     for(let i = 0; i < enemiesAll.length; ++i){
         if(mouseX <= enemiesAll[i].x + enemiesAll[i].width && mouseX >= enemiesAll[i].x && mouseY <= enemiesAll[i].y + enemiesAll[i].height && mouseY >= enemiesAll[i].y){
             enemiesAll[i].health--;
@@ -144,14 +162,13 @@ function newEnemy(){
 window.onload = function(){
     document.addEventListener('click', (e) =>{
         console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
-        detectEnemies();
+        detectEnemies(e.clientX, e.clientY);
     });
     playGame();
 }
 
 function playGame(){
     window.setInterval(newEnemy, 3000); //Create new enemy every 3 seconds
-    
 }
 
 let animationgId;
@@ -159,12 +176,12 @@ function animate() {
     animationId = requestAnimationFrame(animate);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    enemy.setEverything();
+    enemy.move();
     enemy.draw();
-    block.draw();
+    house.draw();
 }
 
-let block = new Block(canvas.width / 2, canvas.height / 2);
-let enemy = new Enemy(0);
+let house = new Block(0, 0);
+let enemy = new Enemy(2);
 animate();
 
