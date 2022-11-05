@@ -26,7 +26,7 @@ function animate() {
     animationId = requestAnimationFrame(animate);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    Block.draw();
+    block.draw();
 }
 
 function getInput(e){
@@ -37,7 +37,11 @@ function getInput(e){
 }
 
 window.onload = function(){
-    e = MouseEvent();
+    e = MouseEvent('mousedown');
     document.addEventListener('click', getInput(e));
 }
+
+
+
+let block = new Block(canvas.width / 2 - 475, canvas.height / 2 + 255, 10, 10, 'red');
 
