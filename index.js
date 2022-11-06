@@ -9,6 +9,7 @@ var houseHeight = canvas.height;
 const enemiesAll = [];
 var maxEnemies = 5;
 var healthBase = 1000;
+const gameTime = new Date();
 
 function checkHealthBase(){
     console.log(healthBase);
@@ -48,6 +49,8 @@ class Enemy {
         this.attackSpeed = 0;
         this.speed = 0;
         this.distanceCap = 0;
+        this.startTime = 0;
+        this.currentTime = 0;
         this.setEverything();
     }
     setEverything() {
@@ -56,7 +59,7 @@ class Enemy {
                 //for speedy boy
                 this.health = 1;
                 this.damage = 20;
-                this.attackSpeed = 1000;
+                this.attackSpeed = 1;
                 this.speed = -6;
                 this.distanceCap = 250;
                 this.width = 30;
@@ -67,7 +70,7 @@ class Enemy {
                 //for chonk
                 this.health = 5;
                 this.damage = 80;
-                this.attackSpeed = 3000;
+                this.attackSpeed = 3;
                 this.speed = -1;
                 this.distanceCap = 500;
                 this.width = 250;
@@ -78,7 +81,7 @@ class Enemy {
                 //for rangey
                 this.health = 2;
                 this.damage = 20;
-                this.attackSpeed = -1000;
+                this.attackSpeed = 1;
                 this.speed = -1;
                 this.distanceCap = 1100;
                 this.width = 30;
@@ -89,7 +92,7 @@ class Enemy {
                 //for noob
                 this.health = 1;
                 this.damage = 10;
-                this.attackSpeed = -2500;
+                this.attackSpeed = 2.5;
                 this.speed = -2;
                 this.width = 30;
                 this.height = 30;
@@ -100,7 +103,7 @@ class Enemy {
                 //for glass-cannon
                 this.health = 1;
                 this.damage = 100;
-                this.attackSpeed = 3000;
+                this.attackSpeed = 3;
                 this.speed = -3;
                 this.distanceCap = 500;
                 this.width = 20;
@@ -117,8 +120,20 @@ class Enemy {
     move() {
         if(this.x >= this.distanceCap){
             this.x += this.speed;
+            this.startTime = gameTime.getSeconds();
         }else{
-            this.attack();
+            // if(this.counter >= this.attackSpeed){
+            //     this.counter++;
+            // }else{
+            //     this.attack();
+            //     this.counter = 0;
+            // }
+            this.currentTime = gameTime.getSeconds();
+            if(this.currentTime >= this.startTime + this.attackSpeed){
+                console.log("does it run here");
+                this.attack();
+                this.startTime = this.currentTime();
+            }
         }
         
     }
@@ -180,7 +195,7 @@ window.onload = function(){
     document.addEventListener('click', (e) =>{
         var rect = canvas.getBoundingClientRect();
         console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
-        var audio = new Audio('gunshot.mp3');
+        const audio = new Audio('gunshot.mp3');
         audio.play();
         let mouseX = e.clientX - rect.left;
         let mouseY = e.clientY - rect.top;
