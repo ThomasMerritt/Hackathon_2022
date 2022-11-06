@@ -19,7 +19,7 @@ var temp = 0;
 function checkHealthBase(){
     console.log(healthBase);
     if(healthBase <= 0){
-        alert("You died, idiot");
+        alert("You died!!!");
         window.close();
     }
 }
