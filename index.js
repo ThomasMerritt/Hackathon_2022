@@ -7,10 +7,13 @@ var houseWidth = 200;
 var houseHeight = canvas.height;
 
 const enemiesAll = [];
+var maxEnemies = 5;
 var healthBase = 1000;
 
 function checkHealthBase(){
+    console.log(healthBase);
     if(healthBase <= 0){
+        alert("You died, idiot");
         window.close();
     }
 }
@@ -62,12 +65,12 @@ class Enemy {
                 break;
             case 1:
                 //for chonk
-                this.heath = 10;
+                this.health = 5;
                 this.damage = 80;
                 this.attackSpeed = 3000;
                 this.speed = -1;
                 this.distanceCap = 500;
-                this.width = 300;
+                this.width = 250;
                 this.height = 75;
                 this.color = 'yellow';
                 break;
@@ -75,7 +78,7 @@ class Enemy {
                 //for rangey
                 this.health = 2;
                 this.damage = 20;
-                this.attackSpeed = 1000;
+                this.attackSpeed = -1000;
                 this.speed = -1;
                 this.distanceCap = 1100;
                 this.width = 30;
@@ -92,7 +95,6 @@ class Enemy {
                 this.height = 30;
                 this.distanceCap = 300;
                 this.color = 'grey';
-                
                 break;
             case 4:
                 //for glass-cannon
@@ -108,14 +110,17 @@ class Enemy {
         }
     }
     attack(){
-        baseHealth-=this.damage;
+        healthBase-=this.damage;
         checkHealthBase();
     }
 
     move() {
         if(this.x >= this.distanceCap){
             this.x += this.speed;
+        }else{
+            this.attack();
         }
+        
     }
     
     draw() {
@@ -131,13 +136,6 @@ function checkHealth(){
     console.log("reaches here");
     for(let i=0; i<enemiesAll.length; ++i){
         if(enemiesAll[i].health <= 0){
-            // while(i!=enemiesAll.length-1){
-            //     let placeholder = enemiesAll[i+1];
-            //     enemiesAll[i+1] = enemiesAll[i];
-            //     enemiesAll[i]=placeholder;
-            // }
-            // enemiesAll.splice(,1)
-            //blow up and then thomas_death.mp4
             enemiesAll.splice(i, 1);
         }
     }
@@ -145,6 +143,7 @@ function checkHealth(){
 
 function detectEnemies(mouseX, mouseY){
     for(let i = 0; i < enemiesAll.length; ++i){
+        console.log(i + " Color: " + enemiesAll[i].color + '\n' + ' x-value: ' + enemiesAll[i].x + ' - ' + (enemiesAll[i].x + enemiesAll[i].width) + "\n" + enemiesAll[i].width + '\n' + i + ' y-value: ' + enemiesAll[i].y + ' - ' + (enemiesAll[i].y + enemiesAll[i].height) + "\n" + enemiesAll[i].width);
         if(mouseX <= enemiesAll[i].x + enemiesAll[i].width && mouseX >= enemiesAll[i].x && mouseY <= enemiesAll[i].y + enemiesAll[i].height && mouseY >= enemiesAll[i].y){
             enemiesAll[i].health--;
             console.log(enemiesAll[i].health);
@@ -179,9 +178,12 @@ function moveEnemies(){
 
 window.onload = function(){
     document.addEventListener('click', (e) =>{
+        var rect = canvas.getBoundingClientRect();
         console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
-        var mouseX = e.clientX;
-        var mouseY = e.clientY;
+        var audio = new Audio('gunshot.mp3');
+        audio.play();
+        let mouseX = e.clientX - rect.left;
+        let mouseY = e.clientY - rect.top;
         detectEnemies(mouseX, mouseY);
     });
     //playGame();
@@ -190,7 +192,10 @@ window.onload = function(){
 var spawnTimer = 0;
 function playGame(){
     //window.setInterval(newEnemy, 3000); //Create new enemy every 3 seconds
-    if(spawnTimer == 60){
+    if(spawnTimer == 150){
+        if(enemiesAll.length >= maxEnemies){
+            return;
+        }
         newEnemy();
         spawnTimer = 0;
     }
@@ -209,6 +214,7 @@ function animate() {
     moveEnemies();
     
     house.draw();
+    ctx.fillText(healthBase, houseWidth + 100, houseHeight / 2);
 }
 
 let house = new Block(0, 0);
