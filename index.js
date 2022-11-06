@@ -6,6 +6,10 @@ canvas.height = window.innerHeight;
 var houseWidth = 200;
 var houseHeight = canvas.height;
 
+const deathAudios = ['DeliDeath.mp3', 'HaoDeath.mp3', 'Jayanth_Samala.mp3', 'JohnathanDeath.mp3', 'KimberlyDeath.mp3',
+                    'MichaelDeath.mp3', 'MichaelDeath2.mp3', 'RudyDeath.mp3', 'ShiyraDeath.mp3', 'ThomasDeath.mp3',
+                    'ThomasDeath2.mp3', 'TristanDeath.mp3'];
+
 const enemiesAll = [];
 var maxEnemies = 5;
 var healthBase = 1000;
@@ -41,7 +45,8 @@ class Enemy {
     constructor(type) {
         //super(x, y);
         this.x = canvas.width;
-        this.y = getRandomInt(0, houseHeight);
+        // this.y = getRandomInt(100, houseHeight - 70);
+        this.y = getRandomInt(canvas.height / 2 - 100, canvas.height / 2 + 100);
         this.type = type;
         this.health = 0;
         this.width = 0;
@@ -113,8 +118,10 @@ class Enemy {
         }
     }
     attack(){
-        healthBase-=this.damage;
-        checkHealthBase();
+        if (this.health != 0) {
+            healthBase-=this.damage;
+            checkHealthBase();
+        }
     }
 
     move() {
@@ -149,10 +156,13 @@ class Enemy {
 }
 
 function checkHealth(){
+    const deathAudio = new Audio(deathAudios[getRandomInt(0, deathAudios.length)]); 
     console.log("reaches here");
     for(let i=0; i<enemiesAll.length; ++i){
         if(enemiesAll[i].health <= 0){
-            enemiesAll.splice(i, 1);
+            deathAudio.play();
+            deadEnemy = enemiesAll.splice(i, 1);
+            delete deadEnemy[0];
         }
     }
 }
@@ -181,6 +191,9 @@ function newEnemy(){
 }
 
 function drawEnemies(){
+    if(getRandomInt(0,3) == 2){
+        maxEnemies++;
+    }
     for(let i = 0; i < enemiesAll.length; ++i){
         enemiesAll[i].draw();
     }
@@ -196,7 +209,7 @@ window.onload = function(){
     document.addEventListener('click', (e) =>{
         var rect = canvas.getBoundingClientRect();
         console.log("Mouse X position: " + e.clientX + "\nMouse Y position: " + e.clientY);
-        const clickAudio = new Audio('TristanDeath.mp3');
+        const clickAudio = new Audio('gunshot.mp3');
         clickAudio.play();
         let mouseX = e.clientX - rect.left;
         let mouseY = e.clientY - rect.top;
@@ -208,12 +221,14 @@ window.onload = function(){
 var spawnTimer = 0;
 function playGame(){
     //window.setInterval(newEnemy, 3000); //Create new enemy every 3 seconds
-    if(spawnTimer == 150){
+    
+    if(spawnTimer == 100){
+        spawnTimer = 0;
         if(enemiesAll.length >= maxEnemies){
             return;
         }
         newEnemy();
-        spawnTimer = 0;
+        
     }
     else{
         spawnTimer++;
