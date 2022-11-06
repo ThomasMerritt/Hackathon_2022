@@ -46,7 +46,7 @@ class Enemy {
         //super(x, y);
         this.x = canvas.width;
         // this.y = getRandomInt(100, houseHeight - 70);
-        this.y = getRandomInt(canvas.height / 2 - 100, canvas.height / 2 + 100);
+        this.y = getRandomInt(canvas.height / 2 - 200, canvas.height / 2 + 200);
         this.type = type;
         this.health = 0;
         this.width = 0;
